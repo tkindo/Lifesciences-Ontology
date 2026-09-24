@@ -1,0 +1,17 @@
+2026-09-18 08:23:24.479+0000 INFO  Logging config in use: File 'C:\Users\kunalgupta9\OneDrive - Deloitte (O365D)\Desktop\AI Apps\Process Industry\.tools\neo4j\neo4j-community-2026.08.1\conf\user-logs.xml'
+2026-09-18 08:23:24.489+0000 INFO  Starting...
+2026-09-18 08:23:25.212+0000 INFO  This instance is ServerId{b5c2366f} (b5c2366f-159c-4c03-b6c7-7ece3de80ab5)
+2026-09-18 08:23:26.197+0000 INFO  ======== Neo4j 2026.08.1 ========
+2026-09-18 08:23:27.101+0000 INFO  X-Forward header processing enabled with security controls
+2026-09-18 08:23:27.101+0000 WARN  SECURITY WARNING: X-Forward headers accepted from any source - configure allow_proxies
+2026-09-18 08:23:27.101+0000 WARN  SECURITY WARNING: X-Forward headers accept any hostname - configure allow_hosts
+2026-09-18 08:23:28.604+0000 INFO  Anonymous Usage Data is being sent to Neo4j, see https://neo4j.com/docs/usage-data/
+2026-09-18 08:23:29.604+0000 INFO  Bolt enabled on localhost:7687.
+2026-09-18 08:23:29.616+0000 INFO  This server has built-in support for online monitoring through Fleet Manager. Visit https://console.neo4j.io to get started!
+2026-09-18 08:23:29.625+0000 INFO  Fleet discovery broadcasts have been enabled for 1 network: 192.168.1.255
+2026-09-18 08:23:32.280+0000 INFO  HTTP enabled on localhost:7474.
+2026-09-18 08:23:32.282+0000 INFO  Remote interface available at http://localhost:7474/
+2026-09-18 08:23:32.286+0000 INFO  id: 414D31DFFE9A6BD1E7179B60A3663FC3FDA979D4FF09BA33B2815EA6465721FD
+2026-09-18 08:23:32.287+0000 INFO  name: system
+2026-09-18 08:23:32.288+0000 INFO  creationDate: 2026-09-18T08:23:27.747Z
+2026-09-18 08:23:32.288+0000 INFO  Started.

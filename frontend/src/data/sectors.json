@@ -1,0 +1,143 @@
+[
+  {
+    "id": "pharma",
+    "name": "Pharmaceuticals",
+    "eyebrow": "Patient to molecule",
+    "description": "Connect discovery, clinical development, manufacturing, quality, and patient safety in one governed operating model.",
+    "accent": "#156b5d",
+    "functions": [
+      {
+        "id": "pharma-rd",
+        "name": "R&D and CMC",
+        "description": "Defines the product, process, and analytical control strategy.",
+        "owner": "Head of Product Development",
+        "capabilities": [
+          {
+            "id": "pharma-discovery",
+            "name": "Discovery and candidate selection",
+            "description": "Moves a validated target into a nominated development candidate.",
+            "systems": ["ELN", "PLM"],
+            "processes": [{"id":"PH-RD-01","name":"Select development candidate","description":"Evaluate efficacy, safety, and manufacturability evidence before nomination.","owner":"Discovery Sciences","inputs":["Validated target","Lead series"],"outputs":["Development candidate","Target product profile"],"steps":["Review target evidence","Score lead series","Assess developability","Approve candidate nomination"]}]
+          },
+          {
+            "id": "pharma-process-dev",
+            "name": "Process and analytical development",
+            "description": "Establishes a scalable process, methods, specifications, and controls.",
+            "systems": ["PLM", "LIMS"],
+            "processes": [{"id":"PH-RD-02","name":"Define control strategy","description":"Link quality attributes to process parameters and analytical controls.","owner":"CMC Development","inputs":["QTPP","Characterization data"],"outputs":["Control strategy","Product specification"],"steps":["Identify critical quality attributes","Characterize parameters","Validate methods","Approve specification"]}]
+          }
+        ]
+      },
+      {
+        "id": "pharma-clinical",
+        "name": "Clinical Development",
+        "description": "Designs and executes evidence-generating clinical programs.",
+        "owner": "Chief Medical Officer",
+        "capabilities": [
+          {"id":"pharma-trial-design","name":"Trial design","description":"Translates the development strategy into executable protocols.","systems":["CTMS","EDC"],"processes":[{"id":"PH-CL-01","name":"Design clinical protocol","description":"Define endpoints, cohorts, dosing, and statistical analysis.","owner":"Clinical Science","inputs":["Development plan","Safety package"],"outputs":["Approved protocol"],"steps":["Define study objectives","Select endpoints","Draft statistical plan","Approve protocol"]}]},
+          {"id":"pharma-trial-exec","name":"Trial execution and data management","description":"Runs sites, patients, and evidence through database lock.","systems":["CTMS","EDC"],"processes":[{"id":"PH-CL-02","name":"Execute clinical trial","description":"Activate sites, enroll patients, monitor data, and close the study.","owner":"Clinical Operations","inputs":["Approved protocol","Clinical supply"],"outputs":["Locked clinical dataset"],"steps":["Activate sites","Enroll patients","Monitor data quality","Lock database"]}]}
+        ]
+      },
+      {
+        "id": "pharma-operations",
+        "name": "Manufacturing and Supply",
+        "description": "Produces, releases, and distributes compliant medicine.",
+        "owner": "Head of Operations",
+        "capabilities": [
+          {"id":"pharma-batch","name":"Batch manufacturing","description":"Executes approved recipes with full genealogy.","systems":["MES","ERP"],"processes":[{"id":"PH-OP-01","name":"Manufacture commercial batch","description":"Convert released materials into finished dosage form.","owner":"Site Manufacturing","inputs":["Work order","Released materials"],"outputs":["Executed batch record","Manufactured batch"],"steps":["Stage materials","Execute unit operations","Record in-process controls","Reconcile yield"]}]},
+          {"id":"pharma-supply","name":"Release and distribution","description":"Dispositions product and fulfills market demand.","systems":["LIMS","QMS","ERP"],"processes":[{"id":"PH-OP-02","name":"Release and distribute batch","description":"Test, disposition, serialize, and ship approved product.","owner":"Quality and Supply","inputs":["Manufactured batch","Market order"],"outputs":["Released batch","Shipment"],"steps":["Execute release testing","Review batch record","Approve disposition","Fulfill market order"]}]}
+        ]
+      },
+      {
+        "id": "pharma-quality",
+        "name": "Quality and Regulatory",
+        "description": "Maintains the validated state and regulatory license.",
+        "owner": "Chief Quality Officer",
+        "capabilities": [
+          {"id":"pharma-quality-events","name":"Quality event management","description":"Investigates deviations and prevents recurrence.","systems":["QMS"],"processes":[{"id":"PH-QA-01","name":"Investigate deviation and CAPA","description":"Determine root cause, impact, and effective corrective action.","owner":"Quality Assurance","inputs":["Deviation record"],"outputs":["Root cause","Effective CAPA"],"steps":["Triage deviation","Investigate root cause","Approve CAPA","Verify effectiveness"]}]},
+          {"id":"pharma-regulatory","name":"Regulatory lifecycle","description":"Authors submissions and manages post-approval commitments.","systems":["RIMS","QMS"],"processes":[{"id":"PH-RA-01","name":"Manage regulatory submission","description":"Compile, publish, submit, and maintain market authorization content.","owner":"Regulatory Affairs","inputs":["Clinical evidence","CMC dossier"],"outputs":["Market authorization"],"steps":["Compile dossier","Perform quality review","Submit to authority","Track commitments"]}]}
+        ]
+      }
+    ],
+    "entities": [
+      {"id":"drug-product","name":"Drug Product","description":"Finished dosage form supplied to a patient.","system":"PLM","capabilityId":"pharma-process-dev","attributes":["product_id","dosage_form","strength","lifecycle_status"],"relationships":["governed by Product Specification","produced as Batch"]},
+      {"id":"clinical-protocol","name":"Clinical Protocol","description":"Approved design governing a clinical study.","system":"CTMS","capabilityId":"pharma-trial-design","attributes":["protocol_id","phase","version","status"],"relationships":["governs Clinical Trial"]},
+      {"id":"clinical-trial","name":"Clinical Trial","description":"Executing instance of an approved protocol.","system":"CTMS","capabilityId":"pharma-trial-exec","attributes":["trial_id","phase","sites","status"],"relationships":["produces Clinical Dataset"]},
+      {"id":"batch","name":"Batch","description":"A traceable quantity produced in one manufacturing cycle.","system":"MES","capabilityId":"pharma-batch","attributes":["batch_id","product_id","site","status"],"relationships":["documented by Batch Record","tested by Sample"]},
+      {"id":"batch-record","name":"Electronic Batch Record","description":"Structured evidence of batch execution.","system":"MES","capabilityId":"pharma-batch","attributes":["record_id","batch_id","review_status"],"relationships":["documents Batch"]},
+      {"id":"specification","name":"Product Specification","description":"Tests and limits that define product acceptance.","system":"PLM","capabilityId":"pharma-process-dev","attributes":["spec_id","version","effective_date"],"relationships":["governs Drug Product"]},
+      {"id":"deviation","name":"Deviation","description":"Unplanned departure from an approved instruction.","system":"QMS","capabilityId":"pharma-quality-events","attributes":["deviation_id","severity","status","owner"],"relationships":["may trigger CAPA"]},
+      {"id":"submission","name":"Regulatory Submission","description":"Filed content supporting a market authorization.","system":"RIMS","capabilityId":"pharma-regulatory","attributes":["submission_id","region","type","status"],"relationships":["results in Market Authorization"]}
+    ]
+  },
+  {
+    "id": "food-beverage",
+    "name": "Food & Beverage",
+    "eyebrow": "Farm to consumer",
+    "description": "Trace formulation, sourcing, production, quality, and distribution across a fast-moving product portfolio.",
+    "accent": "#b95c18",
+    "functions": [
+      {"id":"fb-innovation","name":"Product Innovation","description":"Designs recipes, claims, packaging, and launch-ready products.","owner":"VP Product Innovation","capabilities":[
+        {"id":"fb-formulation","name":"Recipe and formulation","description":"Balances sensory, nutritional, cost, and stability targets.","systems":["PLM","LIMS"],"processes":[{"id":"FB-IN-01","name":"Develop product recipe","description":"Iterate ingredients and parameters into an approved formula.","owner":"Food Science","inputs":["Product brief","Ingredient library"],"outputs":["Approved formula"],"steps":["Translate consumer need","Prototype recipes","Run sensory evaluation","Approve formula"]}]},
+        {"id":"fb-launch","name":"Product and packaging launch","description":"Industrializes formula, label, and packaging specifications.","systems":["PLM","Artwork"],"processes":[{"id":"FB-IN-02","name":"Commercialize new product","description":"Move an approved formula into factory and market readiness.","owner":"Innovation PMO","inputs":["Approved formula","Claims brief"],"outputs":["Launch-ready SKU"],"steps":["Scale pilot recipe","Validate shelf life","Approve artwork","Release SKU"]}]}
+      ]},
+      {"id":"fb-supply","name":"Procurement and Agriculture","description":"Secures safe, sustainable ingredients and packaging.","owner":"Chief Procurement Officer","capabilities":[
+        {"id":"fb-supplier","name":"Supplier qualification","description":"Qualifies source, facility, ingredient, and risk controls.","systems":["SRM","QMS"],"processes":[{"id":"FB-SC-01","name":"Qualify ingredient supplier","description":"Assess supplier controls before commercial purchasing.","owner":"Supplier Quality","inputs":["Supplier application","Ingredient specification"],"outputs":["Approved supplier"],"steps":["Screen documentation","Assess risk","Audit supplier","Approve source"]}]},
+        {"id":"fb-planning","name":"Demand and material planning","description":"Balances forecast, capacity, perishability, and inventory.","systems":["ERP","APS"],"processes":[{"id":"FB-SC-02","name":"Plan supply network","description":"Translate demand into production and material requirements.","owner":"Supply Planning","inputs":["Demand forecast","Inventory position"],"outputs":["Constrained supply plan"],"steps":["Review forecast","Check capacity","Plan ingredients","Publish schedule"]}]}
+      ]},
+      {"id":"fb-operations","name":"Manufacturing Operations","description":"Transforms ingredients into packaged, traceable products.","owner":"VP Operations","capabilities":[
+        {"id":"fb-production","name":"Production execution","description":"Controls recipe execution, yield, and line performance.","systems":["MES","SCADA"],"processes":[{"id":"FB-OP-01","name":"Execute production run","description":"Produce finished goods to recipe and schedule.","owner":"Plant Operations","inputs":["Production order","Released ingredients"],"outputs":["Finished lot","Production record"],"steps":["Stage ingredients","Execute recipe","Monitor critical limits","Reconcile output"]}]},
+        {"id":"fb-warehouse","name":"Cold chain and distribution","description":"Protects shelf life through storage and delivery.","systems":["WMS","TMS"],"processes":[{"id":"FB-OP-02","name":"Distribute finished goods","description":"Allocate, pick, load, and deliver products within controls.","owner":"Logistics","inputs":["Released lot","Customer order"],"outputs":["Delivered shipment"],"steps":["Allocate inventory","Verify FEFO","Load shipment","Monitor delivery"]}]}
+      ]},
+      {"id":"fb-quality","name":"Food Safety and Quality","description":"Controls hazards, specifications, inspections, and incidents.","owner":"Chief Food Safety Officer","capabilities":[
+        {"id":"fb-haccp","name":"Food safety and HACCP","description":"Identifies hazards and controls critical points.","systems":["QMS","LIMS"],"processes":[{"id":"FB-QA-01","name":"Manage HACCP plan","description":"Maintain hazard analysis and verify critical controls.","owner":"Food Safety","inputs":["Process flow","Hazard data"],"outputs":["Verified HACCP plan"],"steps":["Analyze hazards","Set critical limits","Monitor controls","Verify plan"]}]},
+        {"id":"fb-recall","name":"Traceability and recall","description":"Traces ingredients and finished goods for rapid containment.","systems":["ERP","QMS"],"processes":[{"id":"FB-QA-02","name":"Execute product recall","description":"Assess, trace, contain, notify, and reconcile affected product.","owner":"Crisis Management","inputs":["Food safety incident"],"outputs":["Reconciled recall"],"steps":["Assess incident","Trace affected lots","Notify channels","Reconcile product"]}]}
+      ]}
+    ],
+    "entities": [
+      {"id":"formula","name":"Product Formula","description":"Approved ingredient composition and processing parameters.","system":"PLM","capabilityId":"fb-formulation","attributes":["formula_id","version","yield","status"],"relationships":["contains Ingredient","defines SKU"]},
+      {"id":"ingredient","name":"Ingredient","description":"Raw agricultural or processed input.","system":"ERP","capabilityId":"fb-supplier","attributes":["ingredient_id","allergen_profile","origin","status"],"relationships":["supplied by Supplier","consumed in Production Lot"]},
+      {"id":"supplier","name":"Supplier","description":"Qualified source of ingredients or packaging.","system":"SRM","capabilityId":"fb-supplier","attributes":["supplier_id","risk_tier","approval_status"],"relationships":["supplies Ingredient"]},
+      {"id":"supply-plan","name":"Supply Plan","description":"Time-phased plan balancing demand and supply.","system":"APS","capabilityId":"fb-planning","attributes":["plan_id","horizon","demand","capacity"],"relationships":["drives Production Order"]},
+      {"id":"production-lot","name":"Production Lot","description":"Traceable finished quantity from a production run.","system":"MES","capabilityId":"fb-production","attributes":["lot_id","sku","line","status"],"relationships":["uses Ingredient Lot","shipped in Delivery"]},
+      {"id":"delivery","name":"Delivery","description":"Controlled movement of finished product to a customer.","system":"TMS","capabilityId":"fb-warehouse","attributes":["delivery_id","route","temperature","status"],"relationships":["contains Production Lot"]},
+      {"id":"haccp-plan","name":"HACCP Plan","description":"Hazards, critical control points, limits, and verification.","system":"QMS","capabilityId":"fb-haccp","attributes":["plan_id","version","ccp_count","status"],"relationships":["governs Production Process"]},
+      {"id":"recall","name":"Recall Event","description":"Controlled market action for affected products.","system":"QMS","capabilityId":"fb-recall","attributes":["recall_id","classification","scope","status"],"relationships":["impacts Production Lot"]}
+    ]
+  },
+  {
+    "id": "oil-gas",
+    "name": "Oil & Gas",
+    "eyebrow": "Reservoir to market",
+    "description": "Connect subsurface decisions, field execution, asset integrity, and hydrocarbon movement across the value chain.",
+    "accent": "#32679a",
+    "functions": [
+      {"id":"og-sub","name":"Subsurface and Exploration","description":"Characterizes resources and selects economically viable opportunities.","owner":"VP Exploration","capabilities":[
+        {"id":"og-evaluation","name":"Basin and prospect evaluation","description":"Integrates seismic, geology, and economics to mature prospects.","systems":["G&G","Economics"],"processes":[{"id":"OG-SS-01","name":"Evaluate exploration prospect","description":"Estimate volumes, uncertainty, risk, and commercial value.","owner":"Exploration Team","inputs":["Seismic survey","Well data"],"outputs":["Risked prospect"],"steps":["Interpret seismic","Build earth model","Estimate resources","Rank prospect"]}]},
+        {"id":"og-reservoir","name":"Reservoir management","description":"Optimizes depletion strategy and recovery.","systems":["Reservoir Modeling","Historian"],"processes":[{"id":"OG-SS-02","name":"Update reservoir model","description":"Calibrate forecasts using surveillance and production history.","owner":"Reservoir Engineering","inputs":["Production history","Pressure survey"],"outputs":["Updated development forecast"],"steps":["Load surveillance data","History match model","Run scenarios","Approve forecast"]}]}
+      ]},
+      {"id":"og-wells","name":"Drilling and Wells","description":"Plans, constructs, completes, and maintains safe wells.","owner":"VP Wells","capabilities":[
+        {"id":"og-well-design","name":"Well planning and design","description":"Defines trajectory, casing, fluids, and barrier architecture.","systems":["Well Planning","EDM"],"processes":[{"id":"OG-WL-01","name":"Design well","description":"Produce an approved well design within subsurface and safety constraints.","owner":"Well Engineering","inputs":["Target coordinates","Offset well data"],"outputs":["Approved well program"],"steps":["Define trajectory","Design casing","Assess well control risk","Approve program"]}]},
+        {"id":"og-drilling","name":"Drilling execution","description":"Executes the well program and captures operational learning.","systems":["EDR","Daily Reporting"],"processes":[{"id":"OG-WL-02","name":"Drill and complete well","description":"Construct and hand over a safe, productive well.","owner":"Drilling Operations","inputs":["Approved well program"],"outputs":["Completed well","End-of-well report"],"steps":["Mobilize rig","Drill sections","Run completion","Hand over well"]}]}
+      ]},
+      {"id":"og-production","name":"Production Operations","description":"Operates facilities and moves hydrocarbons safely and efficiently.","owner":"VP Production","capabilities":[
+        {"id":"og-optimize","name":"Production optimization","description":"Balances wells, constraints, and facilities for stable output.","systems":["SCADA","Historian"],"processes":[{"id":"OG-PO-01","name":"Optimize field production","description":"Detect constraints and adjust operating setpoints.","owner":"Production Engineering","inputs":["Well tests","Facility constraints"],"outputs":["Optimized production plan"],"steps":["Monitor rates","Identify constraints","Model opportunities","Adjust setpoints"]}]},
+        {"id":"og-hydrocarbon","name":"Hydrocarbon accounting","description":"Measures, allocates, and reconciles produced volumes.","systems":["Production Accounting","ERP"],"processes":[{"id":"OG-PO-02","name":"Allocate production volumes","description":"Reconcile measured volumes from wellhead to sales point.","owner":"Hydrocarbon Accounting","inputs":["Meter readings","Tank movements"],"outputs":["Allocated volumes"],"steps":["Collect measurements","Validate data","Run allocation","Approve statement"]}]}
+      ]},
+      {"id":"og-integrity","name":"Asset Integrity and HSE","description":"Protects people, environment, wells, and facilities.","owner":"Chief Operations Officer","capabilities":[
+        {"id":"og-maintenance","name":"Reliability and maintenance","description":"Prioritizes work to preserve equipment availability and containment.","systems":["EAM","APM"],"processes":[{"id":"OG-AI-01","name":"Maintain critical equipment","description":"Plan and execute risk-based preventive and corrective work.","owner":"Maintenance","inputs":["Asset strategy","Condition alert"],"outputs":["Completed work order"],"steps":["Assess condition","Plan work","Execute maintenance","Confirm return to service"]}]},
+        {"id":"og-process-safety","name":"Process safety management","description":"Maintains barriers and manages operational risk.","systems":["HSE","Barrier Management"],"processes":[{"id":"OG-AI-02","name":"Manage process safety risk","description":"Identify major accident hazards and assure critical barriers.","owner":"Process Safety","inputs":["Hazard register","Barrier status"],"outputs":["Risk action plan"],"steps":["Review hazards","Assess barrier health","Prioritize gaps","Verify actions"]}]}
+      ]}
+    ],
+    "entities": [
+      {"id":"prospect","name":"Exploration Prospect","description":"Risked subsurface opportunity under evaluation.","system":"G&G","capabilityId":"og-evaluation","attributes":["prospect_id","play","risk","resource_estimate"],"relationships":["contains Reservoir"]},
+      {"id":"reservoir-model","name":"Reservoir Model","description":"Dynamic representation used to forecast recovery.","system":"Reservoir Modeling","capabilityId":"og-reservoir","attributes":["model_id","version","history_match","forecast_date"],"relationships":["predicts Well performance"]},
+      {"id":"well-design","name":"Well Design","description":"Approved technical basis for constructing a well.","system":"Well Planning","capabilityId":"og-well-design","attributes":["design_id","trajectory","casing_scheme","status"],"relationships":["governs Well"]},
+      {"id":"well","name":"Well","description":"Constructed path connecting surface facilities to a reservoir.","system":"EDM","capabilityId":"og-drilling","attributes":["well_id","field","status","total_depth"],"relationships":["produces Production Stream"]},
+      {"id":"production-stream","name":"Production Stream","description":"Measured flow of oil, gas, and water.","system":"Historian","capabilityId":"og-optimize","attributes":["stream_id","rate","pressure","timestamp"],"relationships":["allocated in Volume Statement"]},
+      {"id":"volume-statement","name":"Volume Statement","description":"Approved allocation of produced and sold volumes.","system":"Production Accounting","capabilityId":"og-hydrocarbon","attributes":["statement_id","period","allocated_volume","status"],"relationships":["reconciles Production Stream"]},
+      {"id":"work-order","name":"Maintenance Work Order","description":"Authorized maintenance scope for an asset.","system":"EAM","capabilityId":"og-maintenance","attributes":["work_order_id","asset_id","priority","status"],"relationships":["maintains Equipment"]},
+      {"id":"barrier","name":"Safety Barrier","description":"Preventive or mitigative control for a major hazard.","system":"Barrier Management","capabilityId":"og-process-safety","attributes":["barrier_id","hazard_id","health","owner"],"relationships":["controls Major Hazard"]}
+    ]
+  }
+]
